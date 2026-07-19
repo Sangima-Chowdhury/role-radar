@@ -1,7 +1,6 @@
 import os
 import json
 import requests
-from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -12,6 +11,7 @@ SERPER_API_KEY = os.environ.get("SERPER_API_KEY")
 
 # Scrape the internet to fetch the content of a job post & returns clean text. Clause calls this first to read the actual job description.
 def scrape_url(url: str) -> str:
+    from bs4 import BeautifulSoup
     try:
         headers = {"User-Agent": "Mozilla/5.0"}
         response = requests.get(url, headers=headers, timeout=10)
