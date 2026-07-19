@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RoleRadar — scan before you apply</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+</head>
+<body>
+  <div class="page">
+
+    <nav class="nav">
+      <div class="brand">
+        <svg width="28" height="28" viewBox="0 0 40 40" aria-hidden="true">
+          <circle cx="20" cy="20" r="16" fill="none" stroke="#afa9ec" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <circle cx="20" cy="20" r="8" fill="none" stroke="#534ab7" stroke-width="1.5"/>
+          <line x1="20" y1="4" x2="20" y2="12" stroke="#534ab7" stroke-width="2" stroke-linecap="round"/>
+          <line x1="20" y1="28" x2="20" y2="36" stroke="#534ab7" stroke-width="2" stroke-linecap="round"/>
+          <line x1="4" y1="20" x2="12" y2="20" stroke="#534ab7" stroke-width="2" stroke-linecap="round"/>
+          <line x1="28" y1="20" x2="36" y2="20" stroke="#534ab7" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="20" cy="20" r="3" fill="#534ab7"/>
+        </svg>
+        <span class="brand-name">RoleRadar</span>
+      </div>
+      <span style="font-size:13px; color:var(--muted-2);">protect your time</span>
+    </nav>
+
+    <section class="hero">
+      <div class="hero-left">
+
+        <span class="badge">AI-powered job intelligence</span>
+        <h1 class="headline">Scan before<br>you apply.</h1>
+        <p class="subhead">Paste a job URL. RoleRadar researches the company,
+          flags red flags, scores your fit, and writes a tailored cover letter.</p>
+
+        {% if error %}
+          <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <form action="{{ url_for('analyse') }}" method="post" id="scan-form">
+          <div class="input-row">
+            <input
+              type="url"
+              name="job_url"
+              id="job_url"
+              placeholder="https://www.reed.co.uk/jobs/..."
+              required
+              class="url-input"
+            >
+            <button type="submit" class="scan-btn" id="submit-btn">
+              Scan role
+            </button>
+          </div>
+        </form>
+
+          <div class="paste-section">
+            <label for="job_description" class="paste-label">
+              <i class="ti ti-brand-linkedin" aria-hidden="true"></i>
+              LinkedIn or protected URL? Paste the job description below (optional)
+            </label>
+            <textarea
+              name="job_description"
+              id="job_description"
+              class="job-paste"
+              placeholder="Copy and paste the full job description here if the URL above doesn't work..."
+              rows="5"
+            ></textarea>
+          </div>
+        </form>
+
+        <p class="input-hint">Free · no account needed</p>
+
+        <div class="loading" id="loading">
+          <div class="spinner"></div>
+          <p>RoleRadar is researching this role — this takes 60-90 seconds on first load…</p>
+        </div>
+
+      </div>
+
+      <div class="preview-card">
+        <div class="preview-label">LIVE RESULT</div>
+        <div class="preview-label" style="margin-top:8px;">FIT SCORE</div>
+        <div class="preview-score">78<span>/100</span></div>
+        <div class="progress-bar">
+          <div class="progress-fill score-purple" style="width:78%;"></div>
+        </div>
+        <span class="verdict-pill verdict-apply">Apply</span>
+        <p class="preview-note">Company verified · salary realistic · one red flag</p>
+        <div class="preview-footer">
+          <i class="ti ti-mail" style="font-size:16px; vertical-align:-2px;" aria-hidden="true"></i>
+          Cover letter ready
+        </div>
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="feature">
+        <i class="ti ti-search feature-icon" style="color:#534ab7;" aria-hidden="true"></i>
+        <h3>Company research</h3>
+        <p>Verifies the company is real, checks reviews, and surfaces any scam reports.</p>
+      </div>
+      <div class="feature">
+        <i class="ti ti-alert-triangle feature-icon" style="color:#e24b4a;" aria-hidden="true"></i>
+        <h3>Red flag detection</h3>
+        <p>Spots vague descriptions, unrealistic salaries, and unverifiable recruiters.</p>
+      </div>
+      <div class="feature">
+        <i class="ti ti-chart-bar feature-icon" style="color:#0f6e56;" aria-hidden="true"></i>
+        <h3>Fit score</h3>
+        <p>Compares the role requirements against your CV and gives you an honest score.</p>
+      </div>
+      <div class="feature">
+        <i class="ti ti-mail feature-icon" style="color:#534ab7;" aria-hidden="true"></i>
+        <h3>Cover letter</h3>
+        <p>Writes a tailored cover letter based on your actual skills — not a template.</p>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-brand">
+        <svg width="16" height="16" viewBox="0 0 40 40" aria-hidden="true">
+          <circle cx="20" cy="20" r="16" fill="none" stroke="#afa9ec" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <circle cx="20" cy="20" r="8" fill="none" stroke="#534ab7" stroke-width="1.5"/>
+          <line x1="20" y1="4" x2="20" y2="12" stroke="#534ab7" stroke-width="2" stroke-linecap="round"/>
+          <line x1="20" y1="28" x2="20" y2="36" stroke="#534ab7" stroke-width="2" stroke-linecap="round"/>
+          <line x1="4" y1="20" x2="12" y2="20" stroke="#534ab7" stroke-width="2" stroke-linecap="round"/>
+          <line x1="28" y1="20" x2="36" y2="20" stroke="#534ab7" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="20" cy="20" r="3" fill="#534ab7"/>
+        </svg>
+        RoleRadar · built in East London
+      </div>
+      <div class="footer-links">privacy · contact</div>
+    </footer>
+
+  </div>
+
+  <script>
+    const form = document.getElementById('scan-form');
+    const loading = document.getElementById('loading');
+    const btn = document.getElementById('submit-btn');
+
+    form.addEventListener('submit', function () {
+      loading.classList.add('show');
+      btn.disabled = true;
+      btn.textContent = 'Scanning…';
+    });
+  </script>
+</body>
+</html>

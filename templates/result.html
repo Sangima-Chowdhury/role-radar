@@ -1,0 +1,150 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RoleRadar — your results</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+</head>
+<body>
+  <div class="page">
+
+    <nav class="nav">
+      <div class="brand">
+        <svg width="28" height="28" viewBox="0 0 40 40" aria-hidden="true">
+          <circle cx="20" cy="20" r="16" fill="none" stroke="#afa9ec" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <circle cx="20" cy="20" r="8" fill="none" stroke="#534ab7" stroke-width="1.5"/>
+          <line x1="20" y1="4" x2="20" y2="12" stroke="#534ab7" stroke-width="2" stroke-linecap="round"/>
+          <line x1="20" y1="28" x2="20" y2="36" stroke="#534ab7" stroke-width="2" stroke-linecap="round"/>
+          <line x1="4" y1="20" x2="12" y2="20" stroke="#534ab7" stroke-width="2" stroke-linecap="round"/>
+          <line x1="28" y1="20" x2="36" y2="20" stroke="#534ab7" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="20" cy="20" r="3" fill="#534ab7"/>
+        </svg>
+        <span class="brand-name">RoleRadar</span>
+      </div>
+      <a href="{{ url_for('index') }}" class="nav-link">scan another</a>
+    </nav>
+
+    <div class="result-wrap">
+      <div class="result-grid">
+
+        <!-- fit score card -->
+        <div class="result-card">
+          <div class="card-label">FIT SCORE</div>
+          {% if score %}
+            <div class="score-number">
+              {{ score.fit_score }}<span>/100</span>
+            </div>
+            <div class="score-bar">
+              <div class="score-fill
+                {% if score.fit_score >= 70 %}score-purple
+                {% elif score.fit_score >= 40 %}score-amber
+                {% else %}score-red{% endif %}"
+                style="width: {{ score.fit_score }}%;">
+              </div>
+            </div>
+            <span class="verdict-pill
+              {% if score.recommendation == 'apply' %}verdict-apply
+              {% elif score.recommendation == 'proceed with caution' %}verdict-caution
+              {% else %}verdict-avoid{% endif %}">
+              {{ score.recommendation | capitalize }}
+            </span>
+          {% else %}
+            <div class="score-number">—</div>
+            <p style="font-size:13px; color:var(--muted-2); margin-top:8px;">
+              Score unavailable for this role.
+            </p>
+          {% endif %}
+        </div>
+
+        <!-- verdict card -->
+        <div class="result-card">
+          <div class="card-label">VERDICT</div>
+          {% if score and score.green_flags %}
+            <div class="flags-section">
+              <div class="flags-title">Green flags</div>
+              {% for flag in score.green_flags %}
+                <div class="flag-item">
+                  <i class="ti ti-circle-check flag-green" aria-hidden="true"></i>
+                  {{ flag }}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+          {% if score and score.red_flags %}
+            <div class="flags-section">
+              <div class="flags-title">Red flags</div>
+              {% for flag in score.red_flags %}
+                <div class="flag-item">
+                  <i class="ti ti-alert-circle flag-red" aria-hidden="true"></i>
+                  {{ flag }}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+          {% if not score %}
+            <p style="font-size:13px; color:var(--muted-2);">
+              No verdict available.
+            </p>
+          {% endif %}
+        </div>
+
+        <!-- cover letter card — full width -->
+        <div class="result-card full-width">
+          <div class="card-label">COVER LETTER</div>
+          {% if cover_letter %}
+            <div class="cover-letter-text" id="cover-letter-text">{{ cover_letter }}</div>
+            <button class="copy-btn" id="copy-btn" onclick="copyLetter()">
+              <i class="ti ti-copy" aria-hidden="true"></i>
+              Copy to clipboard
+            </button>
+          {% else %}
+            <p style="font-size:13px; color:var(--muted-2);">
+              No cover letter generated.
+            </p>
+          {% endif %}
+        </div>
+
+      </div>
+
+      <a href="{{ url_for('index') }}" class="back-link">
+        <i class="ti ti-arrow-left" aria-hidden="true"></i>
+        Scan another role
+      </a>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-brand">
+        <svg width="16" height="16" viewBox="0 0 40 40" aria-hidden="true">
+          <circle cx="20" cy="20" r="16" fill="none" stroke="#afa9ec" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <circle cx="20" cy="20" r="8" fill="none" stroke="#534ab7" stroke-width="1.5"/>
+          <line x1="20" y1="4" x2="20" y2="12" stroke="#534ab7" stroke-width="2" stroke-linecap="round"/>
+          <line x1="20" y1="28" x2="20" y2="36" stroke="#534ab7" stroke-width="2" stroke-linecap="round"/>
+          <line x1="4" y1="20" x2="12" y2="20" stroke="#534ab7" stroke-width="2" stroke-linecap="round"/>
+          <line x1="28" y1="20" x2="36" y2="20" stroke="#534ab7" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="20" cy="20" r="3" fill="#534ab7"/>
+        </svg>
+        RoleRadar · built in East London
+      </div>
+      <div class="footer-links">privacy · contact</div>
+    </footer>
+
+  </div>
+
+  <script>
+    function copyLetter() {
+      const text = document.getElementById('cover-letter-text').innerText;
+      const btn = document.getElementById('copy-btn');
+
+      navigator.clipboard.writeText(text).then(function () {
+        btn.innerHTML = '<i class="ti ti-check" aria-hidden="true"></i> Copied!';
+        setTimeout(function () {
+          btn.innerHTML = '<i class="ti ti-copy" aria-hidden="true"></i> Copy to clipboard';
+        }, 2000);
+      }).catch(function () {
+        btn.textContent = 'Copy failed — please select manually';
+      });
+    }
+  </script>
+</body>
+</html>
