@@ -2,7 +2,7 @@
 
 **Scan a job post before you apply. Research, red flags, fit score, cover letter — all in one.**
 
-Live → [role-radar.onrender.com](https://role-radar.onrender.com)
+Live → [role-radar.onrender.com](https://role-radar-apbm.onrender.com)
 
 ---
 
